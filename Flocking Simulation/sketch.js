@@ -1,7 +1,20 @@
+const flock = [];
+
 function setup() {
-  // put setup code here
+  createCanvas(640, 360);
+  for (let i = 0; i < 100; i++) {
+    flock.push(new Particle());
+  }
+
 }
 
 function draw() {
-  // put drawing code here
+  background(51);
+
+  for (let particle of flock) {
+    particle.edges();
+    particle.flock(flock)
+    particle.update();
+    particle.show();
+  }
 }
