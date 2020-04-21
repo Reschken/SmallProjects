@@ -4,7 +4,7 @@ class Particle {
     this.velocity = p5.Vector.random2D();
     this.velocity.setMag(random(2, 4));
     this.acceleration = createVector();
-    this.maxForce = 0.2;
+    this.maxForce = 1;
     this.maxSpeed = 4;
   }
 
@@ -63,10 +63,39 @@ class Particle {
     return steering;
   }
 
+  seperation(particles) {
+    let perceptionRadius = 50;
+    let steering = createVector();
+    let total = 0;
+    for (let other of particles) {
+      let d = dist(this.position.x, this.position.y, other.position.x, other.position.y);
+      if (other != this && d < perceptionRadius) {
+        let diff = p5.Vector.sub(this.position, other.position);
+        diff.div(d);
+        steering.add(diff);
+        total++;
+      }
+    }
+    if (total > 0) {
+      steering.div(total);
+      steering.setMag(this.maxSpeed);
+      steering.sub(this.velocity);
+      steering.limit(this.maxForce);
+    }
+    return steering;
+  }
+
 
   flock(particles) {
     let alignment = this.align(particles);
     let cohesion = this.cohesion(particles);
+    let seperation = this.seperation(particles);
+
+    seperation.mult(seperationSlider.value());
+    cohesion.mult(cohesionSlider.value());
+    alignment.mult(alignSlider.value());
+
+    this.acceleration.add(seperation);
     this.acceleration.add(alignment);
     this.acceleration.add(cohesion);
   }
