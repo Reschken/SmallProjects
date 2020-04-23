@@ -90,11 +90,6 @@ class Particle {
     let alignment = this.align(particles);
     let cohesion = this.cohesion(particles);
     let seperation = this.seperation(particles);
-
-    seperation.mult(seperationSlider.value());
-    cohesion.mult(cohesionSlider.value());
-    alignment.mult(alignSlider.value());
-
     this.acceleration.add(seperation);
     this.acceleration.add(alignment);
     this.acceleration.add(cohesion);
